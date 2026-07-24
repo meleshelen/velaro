@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VELARO — онлайн-магазин одягу, взуття та жіночої білизни.">
+  <title>VELARO | Онлайн-магазин</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="#top">VELARO</a>
+
+    <button class="mobile-menu-button" id="mobile-menu-button" type="button" aria-label="Відкрити меню">☰</button>
+
+    <nav class="main-nav" id="main-nav" aria-label="Категорії">
+      <button class="filter-btn active" type="button" data-category="all">Усі товари</button>
+      <button class="filter-btn" type="button" data-category="women">Жінки</button>
+      <button class="filter-btn" type="button" data-category="men">Чоловіки</button>
+      <button class="filter-btn" type="button" data-category="women-shoes">Жіноче взуття</button>
+      <button class="filter-btn" type="button" data-category="men-shoes">Чоловіче взуття</button>
+      <button class="filter-btn" type="button" data-category="lingerie">Білизна</button>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-button" id="search-toggle" type="button" aria-label="Пошук">⌕</button>
+      <button class="cart-button" id="cart-icon" type="button" aria-label="Відкрити кошик">
+        🛒 <span id="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="search-panel" id="search-panel">
+    <label for="search-input">Пошук товарів</label>
+    <input id="search-input" type="search" placeholder="Назва, артикул або категорія">
+  </div>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="hero-kicker">VELARO · НОВА КОЛЕКЦІЯ 2026</span>
+        <h1 id="hero-title">Твій стиль.<br><em>Твої правила.</em></h1>
+        <p>Одяг, взуття та жіноча білизна, які легко поєднувати щодня. Доставка по всій Україні.</p>
+        <div class="hero-actions">
+          <a class="primary-button" href="#catalog">Дивитися каталог</a>
+          <button class="hero-category-link filter-btn" type="button" data-category="women-shoes">Жіноче взуття →</button>
+        </div>
+        <div class="hero-meta"><span>✓ Перевірені фото товарів</span><span>✓ Відправлення по Україні</span></div>
+      </div>
+      <div class="hero-showcase" aria-label="Добірка товарів VELARO">
+        <div class="hero-orbit hero-orbit-one"></div>
+        <div class="hero-orbit hero-orbit-two"></div>
+        <figure class="hero-product hero-product-main"><img src="images/banners/hero-lingerie-1.webp" alt="Білий комплект жіночої білизни VELARO"></figure>
+        <figure class="hero-product hero-product-shoe"><img src="images/banners/hero-sneakers.webp" alt="Жіночі кросівки VELARO"></figure>
+        <figure class="hero-product hero-product-flat"><img src="images/banners/hero-flats.webp" alt="Жіночі балетки VELARO"></figure>
+        <figure class="hero-product hero-product-mini"><img src="images/banners/hero-lingerie-2.webp" alt="Комплект жіночої білизни VELARO"></figure>
+        <span class="hero-stamp">NEW<br><strong>2026</strong></span>
+      </div>
+    </section>
+
+    <section class="benefits" aria-label="Переваги">
+      <article><strong>Швидке замовлення</strong><span>Кілька простих кроків</span></article>
+      <article><strong>Доставка по Україні</strong><span>Нова пошта та Укрпошта</span></article>
+      <article><strong>Самовивіз</strong><span>Запоріжжя, Хортицький район</span></article>
+    </section>
+
+    <section class="catalog-section" id="catalog">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">VELARO SHOP</span>
+          <h2>Каталог товарів</h2>
+        </div>
+
+        <label class="sort-control">
+          <span>Сортування</span>
+          <select id="sort-select">
+            <option value="default">За замовчуванням</option>
+            <option value="price-asc">Ціна: від меншої</option>
+            <option value="price-desc">Ціна: від більшої</option>
+            <option value="name">За назвою</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="products-grid" id="products-grid"></div>
+      <p class="empty-state" id="products-empty" hidden>У цій категорії товарів поки немає.</p>
+    </section>
+  </main>
+
+  <aside class="cart-modal" id="cart-modal" aria-hidden="true">
+    <div class="cart-backdrop" data-close-cart></div>
+
+    <div class="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <div class="cart-header">
+        <h2 id="cart-title">Ваш кошик</h2>
+        <button class="close-button" id="close-cart" type="button" aria-label="Закрити кошик">×</button>
+      </div>
+
+      <div class="cart-items" id="cart-items"></div>
+
+      <div class="cart-summary">
+        <div><span>Разом</span><strong id="cart-total">0 грн</strong></div>
+
+        <button class="primary-button full-width" id="checkout-button" type="button">
+          Оформити замовлення
+        </button>
+
+        <form class="order-form" id="order-form">
+          <h3>Дані покупця</h3>
+
+          <label>
+            Ім’я
+            <input id="customer-name" type="text" autocomplete="name" required>
+          </label>
+
+          <label>
+            Телефон
+            <input id="customer-phone" type="tel" placeholder="+380XXXXXXXXX" autocomplete="tel" required>
+          </label>
+
+          <label>
+            Спосіб доставки
+            <select id="delivery-method" required>
+              <option value="">Оберіть доставку</option>
+              <option value="Нова пошта">Нова пошта</option>
+              <option value="Укрпошта">Укрпошта</option>
+              <option value="Самовивіз">Самовивіз — Запоріжжя</option>
+            </select>
+          </label>
+
+          <label id="delivery-city-group">
+            Місто
+            <input id="delivery-city" type="text" placeholder="Ваше місто">
+          </label>
+
+          <label id="delivery-branch-group">
+            <span id="delivery-branch-label">Номер відділення</span>
+            <input id="delivery-branch" type="text" placeholder="Вкажіть відділення">
+          </label>
+
+          <label>
+            Коментар
+            <textarea id="customer-comment" rows="3" placeholder="За бажанням"></textarea>
+          </label>
+
+          <button class="primary-button full-width" type="submit">Надіслати замовлення</button>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <div class="product-modal" id="product-modal" aria-hidden="true">
+    <div class="product-modal-backdrop" data-close-product></div>
+
+    <div class="product-modal-card" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
+      <button class="close-button product-close" id="close-product" type="button" aria-label="Закрити товар">×</button>
+
+      <div class="product-modal-image-wrap">
+        <img id="product-modal-image" src="" alt="">
+        <div class="product-gallery" id="product-gallery"></div>
+      </div>
+
+      <div class="product-modal-info">
+        <p class="product-category" id="product-modal-category"></p>
+        <h2 id="product-modal-title"></h2>
+        <p class="product-article" id="product-modal-article"></p>
+        <p class="product-description" id="product-modal-description"></p>
+        <div class="product-modal-price" id="product-modal-price"></div>
+
+        <div class="option-block" id="bra-size-block">
+          <span>Обхват і чашка</span>
+          <div class="size-options" id="bra-size-options"></div>
+        </div>
+
+        <div class="option-block" id="panties-size-block">
+          <span>Розмір трусиків</span>
+          <div class="size-options" id="panties-size-options"></div>
+        </div>
+
+        <div class="option-block" id="regular-size-block">
+          <span>Розмір</span>
+          <div class="size-options" id="regular-size-options"></div>
+        </div>
+
+        <button class="primary-button full-width" id="modal-add-to-cart" type="button">
+          Додати в кошик
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="success-modal" id="success-modal" aria-hidden="true">
+    <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
+      <div class="success-mark">✓</div>
+      <p class="eyebrow">ДЯКУЄМО ЗА ПОКУПКУ</p>
+      <h2 id="success-title">Замовлення прийнято</h2>
+      <p>Номер замовлення: <strong id="success-order-number"></strong></p>
+      <p class="success-note">Ми зв’яжемося з вами для підтвердження.</p>
+      <button class="primary-button full-width" id="success-close" type="button">Продовжити покупки</button>
+    </div>
+  </div>
+ <footer class="site-footer">
+  <div>
+    <a class="logo footer-logo" href="#top">VELARO</a>
+    <p>Онлайн-магазин одягу, взуття та жіночої білизни.</p>
+  </div>
+
+  <div>
+    <strong>Контакти</strong>
+    <a href="tel:+380505262952">+380 50 526 29 52</a>
+    <a href="https://t.me/Olena_Lavrushko" target="_blank" rel="noopener">
+      Telegram: @Olena_Lavrushko
+    </a>
+    <span>Самовивіз: Запоріжжя, Хортицький район</span>
+  </div>
+
+  <div>
+    <strong>Покупцям</strong>
+    <a href="#catalog">Каталог</a>
+  </div>
+
+  <p>© 2026 VELARO. Усі права захищені.</p>
+</footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

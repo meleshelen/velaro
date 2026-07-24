@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VELARO | Адмін-панель</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="admin-header">
+    <div>
+      <p class="logo">VELARO</p>
+      <h1>Адмін-панель</h1>
+    </div>
+    <a href="../index.html">Відкрити магазин</a>
+  </header>
+
+  <main class="admin-layout">
+    <section class="admin-card">
+      <div class="section-title">
+        <h2 id="form-title">Додати товар</h2>
+        <button id="reset-form" type="button">Очистити</button>
+      </div>
+
+      <form id="product-form">
+        <input type="hidden" id="product-id">
+
+        <div class="grid-2">
+          <label>
+            Назва
+            <input id="name" type="text" required>
+          </label>
+
+          <label>
+            Артикул
+            <input id="article" type="text" required>
+          </label>
+        </div>
+
+        <div class="grid-2">
+          <label>
+            Категорія
+            <select id="category" required>
+              <option value="women">Жінки</option>
+              <option value="men">Чоловіки</option>
+              <option value="women-shoes">Жіноче взуття</option>
+              <option value="men-shoes">Чоловіче взуття</option>
+              <option value="lingerie">Білизна</option>
+            </select>
+          </label>
+
+          <label>
+            Тип товару
+            <select id="type" required>
+              <option value="clothes">Одяг</option>
+              <option value="shoes">Взуття</option>
+              <option value="lingerie">Білизна</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid-2">
+          <label>
+            Ціна, грн
+            <input id="price" type="number" min="0" required>
+          </label>
+
+          <label>
+            Стара ціна, грн
+            <input id="old-price" type="number" min="0">
+          </label>
+        </div>
+
+        <label>
+          Фото товару
+          <input id="image-file" type="file" accept="image/*">
+          <small>Фото збережеться у браузері. Для справжнього сайту пізніше підключимо сервер.</small>
+        </label>
+
+        <label>
+          Або шлях до фото
+          <input id="image-url" type="text" placeholder="../images/products/photo.jpg">
+        </label>
+
+        <img id="image-preview" class="image-preview" alt="Попередній перегляд">
+
+        <label>
+          Опис
+          <textarea id="description" rows="4"></textarea>
+        </label>
+
+        <label>
+          Значок на картці
+          <input id="badge" type="text" placeholder="Новинка, Хіт, Акція">
+        </label>
+
+        <div id="regular-sizes-panel">
+          <label>
+            Розміри та залишки
+            <textarea id="sizes" rows="5" placeholder="S:2, M:4, L:3 або 36:2, 37:5, 38:0"></textarea>
+          </label>
+        </div>
+
+        <div id="lingerie-sizes-panel" hidden>
+          <label>
+            Обхват і чашка
+            <textarea id="bra-sizes" rows="4" placeholder="75B:2, 80B:4, 80C:1"></textarea>
+          </label>
+
+          <label>
+            Розміри трусиків
+            <textarea id="panties-sizes" rows="4" placeholder="S:3, M:5, L:2, XL:0"></textarea>
+          </label>
+        </div>
+
+        <button class="primary" type="submit">Зберегти товар</button>
+      </form>
+    </section>
+
+    <section class="admin-card">
+      <div class="section-title">
+        <div>
+          <h2>Товари</h2>
+          <p id="product-count"></p>
+        </div>
+        <button id="restore-defaults" type="button">Відновити приклади</button>
+      </div>
+
+      <div id="admin-products" class="admin-products"></div>
+    </section>
+  
+    <section class="admin-card orders-card" id="orders-section">
+      <div class="section-title"><div><h2>Замовлення</h2><p>Supabase або локальні тестові замовлення</p></div><button id="orders-refresh" type="button">Оновити</button></div>
+      <div class="admin-login" id="admin-login"><label>Пароль адміністратора<input id="admin-password" type="password" autocomplete="current-password" placeholder="Введіть ADMIN_PASSWORD"></label><button class="primary" id="admin-login-button" type="button">Увійти</button><p id="admin-login-message"></p></div>
+      <div id="orders-dashboard" hidden>
+        <div class="order-stats" id="order-stats"></div>
+        <div class="order-tools"><input id="orders-search" type="search" placeholder="Пошук за номером, ім’ям або телефоном"><select id="orders-filter"><option value="all">Усі статуси</option><option value="new">Нові</option><option value="processing">В обробці</option><option value="sent">Відправлені</option><option value="completed">Виконані</option><option value="cancelled">Скасовані</option></select></div>
+        <div class="orders-list" id="orders-list"></div>
+      </div>
+    </section>
+</main>
+
+  <script src="../js/products.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
