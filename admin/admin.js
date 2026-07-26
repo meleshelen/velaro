@@ -1,3 +1,78 @@
+const productsAuth = document.getElementById("products-auth");
+const adminContent = document.getElementById("admin-content");
+const productsAuthForm = document.getElementById("products-auth-form");
+const productsAuthEmail = document.getElementById("products-auth-email");
+const productsAuthPassword = document.getElementById("products-auth-password");
+const productsAuthMessage = document.getElementById("products-auth-message");
+const adminLogoutButton = document.getElementById("admin-logout");
+
+function getProductsAuthClient() {
+  return window.velaroAdminApi.getClient();
+}
+
+function showAdminContent() {
+  productsAuth.hidden = true;
+  adminContent.hidden = false;
+}
+
+function showAdminLogin() {
+  productsAuth.hidden = false;
+  adminContent.hidden = true;
+}
+
+async function checkProductsAuth() {
+  const client = getProductsAuthClient();
+
+  const {
+    data: { session },
+    error
+  } = await client.auth.getSession();
+
+  if (error) {
+    console.error("Помилка перевірки сесії:", error);
+  }
+
+  if (session) {
+    showAdminContent();
+    await initializeAdminProducts();
+  } else {
+    showAdminLogin();
+  }
+}
+
+productsAuthForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  productsAuthMessage.textContent = "Вхід...";
+
+  const client = getProductsAuthClient();
+
+  const { error } = await client.auth.signInWithPassword({
+    email: productsAuthEmail.value.trim(),
+    password: productsAuthPassword.value
+  });
+
+  if (error) {
+    console.error("Помилка входу:", error);
+    productsAuthMessage.textContent = "Невірний email або пароль.";
+    return;
+  }
+
+  productsAuthMessage.textContent = "";
+  productsAuthPassword.value = "";
+
+  showAdminContent();
+  await initializeAdminProducts();
+});
+
+adminLogoutButton.addEventListener("click", async () => {
+  const client = getProductsAuthClient();
+
+  await client.auth.signOut();
+
+  adminProducts = [];
+  showAdminLogin();
+});
 let adminProducts = [];
 let uploadedImageData = "";
 
@@ -328,7 +403,7 @@ async function initializeAdminProducts() {
   }
 }
 
-initializeAdminProducts();
+checkProductsAuth();
 
 
 // ===== Замовлення VELARO =====
