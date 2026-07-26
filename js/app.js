@@ -603,15 +603,21 @@ document.addEventListener("keydown", event => {
 });
 
 window.addEventListener("storage", event => {
-  if (event.key === "velaroProducts") {
+  if (event.key === "velaroProductsV31") {
     products = getProducts();
     renderProducts();
   }
 });
 
-renderProducts();
-updateCart();
-updateDeliveryFields();
+async function initializeStorefront() {
+  products = await loadProductsFromSupabase();
+
+  renderProducts();
+  updateCart();
+  updateDeliveryFields();
+}
+
+initializeStorefront();
 
 
 document.getElementById("success-close").addEventListener("click", () => {

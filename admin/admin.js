@@ -1,4 +1,4 @@
-let adminProducts = getProducts();
+let adminProducts = [];
 let uploadedImageData = "";
 
 function adminImage(src) {
@@ -61,9 +61,7 @@ function stringifySizes(sizes) {
     .join(", ");
 }
 
-function saveProducts() {
-  localStorage.setItem("velaroProductsV31", JSON.stringify(adminProducts));
-}
+
 
 function renderAdminProducts() {
   adminProductsContainer.innerHTML = "";
@@ -152,16 +150,25 @@ function editProduct(productId) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function deleteProduct(productId) {
+async function deleteProduct(productId) {
   const product = adminProducts.find(item => item.id === productId);
   if (!product) return;
 
   if (!confirm(`Видалити товар «${product.name}»?`)) return;
 
-  adminProducts = adminProducts.filter(item => item.id !== productId);
-  saveProducts();
-  renderAdminProducts();
-  resetForm();
+  try {
+    await window.velaroAdminApi.deleteProduct(productId);
+
+    adminProducts = adminProducts.filter(item => item.id !== productId);
+
+    renderAdminProducts();
+    resetForm();
+
+    alert("Товар успішно видалено.");
+  } catch (error) {
+    console.error(error);
+    alert("Не вдалося видалити товар із Supabase.");
+  }
 }
 
 imageFileInput.addEventListener("change", () => {
@@ -198,25 +205,33 @@ imageUrlInput.addEventListener("input", () => {
 
 typeInput.addEventListener("change", updateTypePanels);
 
-productForm.addEventListener("submit", event => {
+productForm.addEventListener("submit", async event => {
   event.preventDefault();
 
   const editingId = Number(productIdInput.value);
-  const image = uploadedImageData || imageUrlInput.value.trim() || "../images/products/placeholder.svg";
+
+  const image =
+    uploadedImageData ||
+    imageUrlInput.value.trim() ||
+    "../images/products/placeholder.svg";
 
   const product = {
-    id: editingId || Date.now(),
     name: nameInput.value.trim(),
     article: articleInput.value.trim(),
     category: categoryInput.value,
     categoryName: categoryNames[categoryInput.value],
     type: typeInput.value,
     price: Number(priceInput.value),
-    oldPrice: oldPriceInput.value ? Number(oldPriceInput.value) : null,
+    oldPrice: oldPriceInput.value
+      ? Number(oldPriceInput.value)
+      : null,
     image,
     images: [image],
     description: descriptionInput.value.trim(),
-    badge: badgeInput.value.trim()
+    badge: badgeInput.value.trim(),
+    sizes: {},
+    braSizes: {},
+    pantiesSizes: {}
   };
 
   if (product.type === "lingerie") {
@@ -226,16 +241,60 @@ productForm.addEventListener("submit", event => {
     product.sizes = parseSizes(sizesInput.value);
   }
 
-  if (editingId) {
-    adminProducts = adminProducts.map(item => item.id === editingId ? product : item);
-  } else {
-    adminProducts.push(product);
-  }
+  const submitButton = productForm.querySelector('[type="submit"]');
+  const originalButtonText = submitButton
+    ? submitButton.textContent
+    : "";
 
-  saveProducts();
-  renderAdminProducts();
-  resetForm();
-  alert(editingId ? "Товар оновлено." : "Товар додано.");
+  try {
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Збереження...";
+    }
+
+    if (editingId) {
+      const updatedProduct =
+        await window.velaroAdminApi.updateProduct(
+          editingId,
+          product
+        );
+
+      adminProducts = adminProducts.map(item =>
+        item.id === editingId ? updatedProduct : item
+      );
+    } else {
+      const createdProduct =
+        await window.velaroAdminApi.createProduct(product);
+
+      adminProducts.push(createdProduct);
+    }
+
+    adminProducts.sort(
+      (a, b) => Number(a.id) - Number(b.id)
+    );
+
+    renderAdminProducts();
+    resetForm();
+
+    alert(
+      editingId
+        ? "Товар оновлено."
+        : "Товар додано."
+    );
+  } catch (error) {
+    console.error("Помилка збереження товару:", error);
+
+    alert(
+      `Не вдалося зберегти товар: ${
+        error.message || "невідома помилка"
+      }`
+    );
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+    }
+  }
 });
 
 resetFormButton.addEventListener("click", resetForm);
@@ -249,8 +308,27 @@ restoreDefaultsButton.addEventListener("click", () => {
   resetForm();
 });
 
-updateTypePanels();
-renderAdminProducts();
+async function initializeAdminProducts() {
+  updateTypePanels();
+
+  productCount.textContent = "Завантаження товарів...";
+
+  try {
+    adminProducts = await window.velaroAdminApi.loadProducts();
+    renderAdminProducts();
+  } catch (error) {
+    console.error(error);
+
+    productCount.textContent = "Помилка";
+
+    adminProductsContainer.innerHTML =
+      "<p>Не вдалося завантажити товари із Supabase.</p>";
+
+    alert("Не вдалося підключитися до Supabase.");
+  }
+}
+
+initializeAdminProducts();
 
 
 // ===== Замовлення VELARO =====
