@@ -14,8 +14,28 @@ function getAdminSupabaseClient() {
     config.publishableKey
   );
 }
+function parseAdminJson(value, fallback = {}) {
+  if (value === null || value === undefined || value === "") {
+    return fallback;
+  }
 
+  if (typeof value === "object") {
+    return value;
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch (error) {
+    console.warn("Не вдалося прочитати JSON:", value);
+    return fallback;
+  }
+}
 function convertAdminProduct(row) {
+  const sizesData = parseAdminJson(row.sizes, {});
+  const imagesData = parseAdminJson(row.images, []);
+  const braSizesData = parseAdminJson(row.bra_sizes, {});
+  const pantiesSizesData = parseAdminJson(row.panties_sizes, {});
+
   return {
     id: Number(row.id),
     name: row.name || "",
@@ -24,17 +44,20 @@ function convertAdminProduct(row) {
     categoryName: row.category_name || "",
     type: row.type || "clothes",
     price: Number(row.price || 0),
+
     oldPrice:
       row.old_price === null || row.old_price === undefined
         ? null
         : Number(row.old_price),
+
     image: row.image || "",
-    images: Array.isArray(row.images) ? row.images : [],
+    images: Array.isArray(imagesData) ? imagesData : [],
     description: row.description || "",
     badge: row.badge || "",
-    sizes: row.sizes || {},
-    braSizes: row.bra_sizes || {},
-    pantiesSizes: row.panties_sizes || {}
+
+    sizes: sizesData.regular || sizesData || {},
+    braSizes: sizesData.bra || braSizesData || {},
+    pantiesSizes: sizesData.panties || pantiesSizesData || {}
   };
 }
 
