@@ -291,6 +291,15 @@ function addActiveProductToCart() {
   }
 
   saveCart();
+  if (typeof fbq === "function") {
+  fbq("track", "AddToCart", {
+    content_ids: [String(activeProduct.id)],
+    content_name: activeProduct.name,
+    content_type: "product",
+    value: Number(activeProduct.price) || 0,
+    currency: "UAH"
+  });
+}
   updateCart();
   closeProduct();
   openCart();
