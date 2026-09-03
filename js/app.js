@@ -205,6 +205,16 @@ function openProduct(productId) {
       button.classList.add("active");
     });
   });
+    if (typeof fbq === "function") {
+    fbq("track", "ViewContent", {
+      content_ids: [String(activeProduct.id)],
+      content_name: activeProduct.name,
+      content_category: activeProduct.category || "product",
+      content_type: "product",
+      value: Number(activeProduct.price) || 0,
+      currency: "UAH"
+    });
+  }
   modalCategory.textContent = activeProduct.categoryName;
   modalTitle.textContent = activeProduct.name;
   modalArticle.textContent = `Артикул: ${activeProduct.article || "—"}`;
