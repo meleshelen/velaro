@@ -952,4 +952,4 @@ img {
   margin-bottom:10px;
   font-size:28px;
   line-height:1;
-}
+}\n\n/* ===== VELARO sales-first additions ===== */\n.hero-main-cta.filter-btn {border-radius:10px!important;background:var(--accent)!important;color:#fff!important;padding:0 22px!important;min-height:48px;font-weight:700}\n.hero-main-cta.filter-btn:hover{background:var(--accent-hover)!important}\n.size-help{margin:28px 5vw 0;padding:34px 38px;display:flex;align-items:center;justify-content:space-between;gap:30px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 12px 34px rgba(24,24,24,.05)}\n.size-help h2{margin:0 0 10px;font-family:Georgia,serif;font-size:clamp(28px,3vw,42px)}\n.size-help p{max-width:720px;margin:0;color:var(--muted);line-height:1.65}\n.size-help .eyebrow{color:var(--accent)}\n@media(max-width:760px){.size-help{margin:18px 18px 0;padding:26px 22px;align-items:stretch;flex-direction:column}.size-help .primary-button{width:100%}.main-nav .filter-btn[data-category="lingerie"]{order:-10}}\n

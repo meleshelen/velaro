@@ -1,5 +1,5 @@
 let cart = loadCart();
-let activeCategory = "all";
+let activeCategory = "lingerie";
 let searchQuery = "";
 let sortMode = "default";
 let activeProduct = null;
