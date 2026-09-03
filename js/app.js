@@ -536,7 +536,23 @@ async function submitOrder(event) {
     submitButton.disabled = false;
     submitButton.textContent = "Надіслати замовлення";
   }
+  if (typeof fbq === "function") {
+    const purchaseValue = cart.reduce(
+      (sum, item) => sum + Number(item.price) * Number(item.quantity || 1),
+      0
+    );
 
+    fbq("track", "Purchase", {
+      content_ids: cart.map(item => String(item.productId)),
+      content_type: "product",
+      num_items: cart.reduce(
+        (sum, item) => sum + Number(item.quantity || 1),
+        0
+      ),
+      value: purchaseValue,
+      currency: "UAH"
+    });
+  }
   cart = [];
   saveCart();
   updateCart();
