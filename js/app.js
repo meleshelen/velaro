@@ -535,8 +535,30 @@ filterButtons.forEach(button => {
     activeCategory = button.dataset.category;
     renderProducts();
     mainNav.classList.remove("open");
+
+    if (button.dataset.scrollCatalog === "true") {
+      const catalog = document.getElementById("catalog");
+      if (catalog) {
+        setTimeout(() => catalog.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+      }
+    }
   });
 });
+
+
+const heroLingerieLink = document.getElementById("hero-lingerie-link");
+if (heroLingerieLink) {
+  heroLingerieLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    activeCategory = "lingerie";
+    filterButtons.forEach(item => {
+      item.classList.toggle("active", item.dataset.category === "lingerie");
+    });
+    renderProducts();
+    const catalog = document.getElementById("catalog");
+    if (catalog) catalog.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
 
 sortSelect.addEventListener("change", () => {
   sortMode = sortSelect.value;
