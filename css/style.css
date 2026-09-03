@@ -1128,3 +1128,162 @@ img {
     color: #000;
   }
 }
+/* ===== VELARO 5.3 FINAL MOBILE MODAL FIX ===== */
+
+@media (max-width: 768px) {
+
+  .product-modal-card {
+    display: block !important;
+    grid-template-columns: 1fr !important;
+    width: calc(100% - 16px) !important;
+    max-width: none !important;
+    max-height: calc(100dvh - 16px) !important;
+    overflow-y: auto !important;
+    background: #151515 !important;
+    border-radius: 22px !important;
+    margin: 8px auto !important;
+  }
+
+  .product-modal-image-wrap {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #f4f4f2 !important;
+    overflow: visible !important;
+  }
+
+  #product-modal-image {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .product-gallery {
+    position: static !important;
+    display: flex !important;
+    width: 100% !important;
+    height: auto !important;
+    gap: 8px !important;
+    padding: 10px !important;
+    overflow-x: auto !important;
+    background: #151515 !important;
+  }
+
+  .product-gallery button {
+    flex: 0 0 70px !important;
+    width: 70px !important;
+    height: 70px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 10px !important;
+  }
+
+  .product-gallery img,
+  .product-gallery button img {
+    display: block !important;
+    width: 70px !important;
+    height: 70px !important;
+    object-fit: cover !important;
+  }
+
+  .product-modal-info {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    padding: 20px 18px 26px !important;
+    margin: 0 !important;
+    background: #151515 !important;
+    color: #fff !important;
+  }
+
+  .product-modal-info *,
+  .product-modal-info p,
+  .product-modal-info span,
+  .product-modal-info h2,
+  .product-modal-info strong {
+    color: #fff !important;
+    opacity: 1 !important;
+  }
+
+  #product-modal-title {
+    display: block !important;
+    font-size: 30px !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    margin: 0 0 8px !important;
+    color: #fff !important;
+  }
+
+  #product-modal-article,
+  #product-modal-description {
+    display: block !important;
+    position: static !important;
+    font-size: 16px !important;
+    line-height: 1.45 !important;
+    margin: 6px 0 !important;
+    color: #ddd !important;
+    background: transparent !important;
+  }
+
+  #product-modal-price {
+    display: block !important;
+    margin: 16px 0 22px !important;
+    font-size: 36px !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    color: #fff !important;
+  }
+
+  .option-block > span {
+    color: #fff !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+  }
+
+  .size-options button {
+    color: #fff !important;
+    background: #202020 !important;
+    border: 1px solid #555 !important;
+    opacity: 1 !important;
+  }
+
+  .size-options button.active,
+  .size-options button.selected {
+    background: #0b5429 !important;
+    border-color: #16a34a !important;
+    color: #fff !important;
+  }
+
+  #modal-add-to-cart {
+    background: #15803d !important;
+    color: #fff !important;
+    opacity: 1 !important;
+  }
+
+  .modal-trust-row,
+  .modal-trust-row span {
+    color: #fff !important;
+    opacity: 1 !important;
+  }
+
+  .product-close {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    z-index: 100 !important;
+    margin: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+}
