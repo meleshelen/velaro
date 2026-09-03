@@ -10,7 +10,7 @@
 
   <title>VELARO | Адмін-панель</title>
 
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="/admin/admin.css?v=47">
 </head>
 
 <body>
@@ -21,8 +21,9 @@
       <p class="logo">VELARO</p>
 
       <h1>Вхід в адмін-панель</h1>
+      <p style="margin-top:-8px;color:#777;font-size:12px">VELARO Admin 4.7</p>
 
-      <form id="products-auth-form">
+      <form id="products-auth-form" action="javascript:void(0)" onsubmit="return false;">
         <label>
           Email
 
@@ -427,15 +428,29 @@
   </div>
 
 
+  <script>
+    // VELARO Admin 4.7: keep the login form on /admin and show script-loading problems.
+    window.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("products-auth-form");
+      if (form) form.addEventListener("submit", event => event.preventDefault());
+    });
+    window.addEventListener("error", event => {
+      const msg = document.getElementById("products-auth-message");
+      if (msg && event.target && event.target.tagName === "SCRIPT") {
+        msg.textContent = "Не завантажився файл входу: " + (event.target.src || "невідомий файл");
+      }
+    }, true);
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="../js/supabase-config.js"></script>
+  <script src="/js/supabase-config.js?v=47"></script>
 
-  <script src="../js/products.js"></script>
+  <script src="/js/products.js?v=47"></script>
 
-  <script src="supabase-admin.js"></script>
+  <script src="/admin/supabase-admin.js?v=47"></script>
 
-  <script src="admin.js"></script>
+  <script src="/admin/admin.js?v=47"></script>
 
 </body>
 </html>

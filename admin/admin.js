@@ -21,21 +21,26 @@ function showAdminLogin() {
 }
 
 async function checkProductsAuth() {
-  const client = getProductsAuthClient();
+  try {
+    const client = getProductsAuthClient();
+    const { data, error } = await client.auth.getSession();
 
-  const {
-    data: { session },
-    error
-  } = await client.auth.getSession();
+    if (error) {
+      console.error("Помилка перевірки сесії:", error);
+      productsAuthMessage.textContent = `Помилка сесії: ${error.message || "невідома помилка"}`;
+      showAdminLogin();
+      return;
+    }
 
-  if (error) {
-    console.error("Помилка перевірки сесії:", error);
-  }
-
-  if (session) {
-    showAdminContent();
-    await initializeAdminProducts();
-  } else {
+    if (data?.session) {
+      showAdminContent();
+      await initializeAdminProducts();
+    } else {
+      showAdminLogin();
+    }
+  } catch (error) {
+    console.error("Помилка запуску адмінки:", error);
+    productsAuthMessage.textContent = `Не вдалося підключити адмінку: ${error.message || error}`;
     showAdminLogin();
   }
 }
@@ -43,26 +48,49 @@ async function checkProductsAuth() {
 productsAuthForm.addEventListener("submit", async event => {
   event.preventDefault();
 
-  productsAuthMessage.textContent = "Вхід...";
+  const email = productsAuthEmail.value.trim();
+  const password = productsAuthPassword.value;
+  const submitButton = productsAuthForm.querySelector('button[type="submit"]');
 
-  const client = getProductsAuthClient();
+  productsAuthMessage.textContent = "Перевіряємо дані…";
+  if (submitButton) submitButton.disabled = true;
 
-  const { error } = await client.auth.signInWithPassword({
-    email: productsAuthEmail.value.trim(),
-    password: productsAuthPassword.value
-  });
+  try {
+    const client = getProductsAuthClient();
+    const { data, error } = await client.auth.signInWithPassword({ email, password });
 
-  if (error) {
-    console.error("Помилка входу:", error);
-    productsAuthMessage.textContent = "Невірний email або пароль.";
-    return;
+    if (error) {
+      console.error("Помилка входу:", error);
+      productsAuthMessage.textContent = `Не вдалося увійти: ${error.message || "невідома помилка"}`;
+      return;
+    }
+
+    if (!data?.session || !data?.user) {
+      productsAuthMessage.textContent = "Supabase не повернув сесію. Спробуйте ще раз.";
+      return;
+    }
+
+    // Додаткова перевірка, що сесія дійсно активна.
+    const { data: userData, error: userError } = await client.auth.getUser();
+    if (userError || !userData?.user) {
+      console.error("Помилка перевірки користувача:", userError);
+      productsAuthMessage.textContent = `Вхід виконано, але сесію не підтверджено: ${userError?.message || "невідома помилка"}`;
+      return;
+    }
+
+    productsAuthMessage.textContent = "Вхід успішний. Завантажуємо адмінку…";
+    showAdminContent();
+
+    // Пароль очищаємо лише ПІСЛЯ успішної авторизації.
+    productsAuthPassword.value = "";
+
+    await initializeAdminProducts();
+  } catch (error) {
+    console.error("Критична помилка входу:", error);
+    productsAuthMessage.textContent = `Помилка підключення: ${error.message || error}`;
+  } finally {
+    if (submitButton) submitButton.disabled = false;
   }
-
-  productsAuthMessage.textContent = "";
-  productsAuthPassword.value = "";
-
-  showAdminContent();
-  await initializeAdminProducts();
 });
 
 adminLogoutButton.addEventListener("click", async () => {
