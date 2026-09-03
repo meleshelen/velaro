@@ -1,0 +1,13 @@
+VELARO — фінальна підготовка
+
+1. Завантажте вміст папки velaro-3.1 у GitHub.
+2. У Supabase відкрийте SQL Editor і виконайте supabase/orders.sql.
+3. У Vercel → Settings → Environment Variables додайте:
+   SUPABASE_URL
+   SUPABASE_SERVICE_ROLE_KEY
+   ADMIN_PASSWORD
+   TELEGRAM_BOT_TOKEN
+   TELEGRAM_CHAT_ID
+4. Redeploy сайт. Адмінка: /admin/
+
+Без налаштованого API замовлення не губляться: вони тимчасово зберігаються в localStorage цього браузера і видно в адмінці на тому самому домені/пристрої.
