@@ -41,6 +41,7 @@ const productGallery = document.getElementById("product-gallery");
 const modalCategory = document.getElementById("product-modal-category");
 const modalTitle = document.getElementById("product-modal-title");
 const modalArticle = document.getElementById("product-modal-article");
+const modalColor = document.getElementById("product-modal-color");
 const modalDescription = document.getElementById("product-modal-description");
 const modalPrice = document.getElementById("product-modal-price");
 const regularSizeBlock = document.getElementById("regular-size-block");
@@ -205,19 +206,13 @@ function openProduct(productId) {
       button.classList.add("active");
     });
   });
-    if (typeof fbq === "function") {
-    fbq("track", "ViewContent", {
-      content_ids: [String(activeProduct.id)],
-      content_name: activeProduct.name,
-      content_category: activeProduct.category || "product",
-      content_type: "product",
-      value: Number(activeProduct.price) || 0,
-      currency: "UAH"
-    });
-  }
   modalCategory.textContent = activeProduct.categoryName;
   modalTitle.textContent = activeProduct.name;
   modalArticle.textContent = `Артикул: ${activeProduct.article || "—"}`;
+  if (modalColor) {
+    modalColor.textContent = activeProduct.color ? `Колір: ${activeProduct.color}` : "";
+    modalColor.hidden = !activeProduct.color;
+  }
   modalDescription.textContent = activeProduct.description || "";
   modalPrice.innerHTML = `
     ${formatPrice(activeProduct.price)}
@@ -291,15 +286,6 @@ function addActiveProductToCart() {
   }
 
   saveCart();
-  if (typeof fbq === "function") {
-  fbq("track", "AddToCart", {
-    content_ids: [String(activeProduct.id)],
-    content_name: activeProduct.name,
-    content_type: "product",
-    value: Number(activeProduct.price) || 0,
-    currency: "UAH"
-  });
-}
   updateCart();
   closeProduct();
   openCart();
@@ -536,23 +522,7 @@ async function submitOrder(event) {
     submitButton.disabled = false;
     submitButton.textContent = "Надіслати замовлення";
   }
-  if (typeof fbq === "function") {
-    const purchaseValue = cart.reduce(
-      (sum, item) => sum + Number(item.price) * Number(item.quantity || 1),
-      0
-    );
 
-    fbq("track", "Purchase", {
-      content_ids: cart.map(item => String(item.productId)),
-      content_type: "product",
-      num_items: cart.reduce(
-        (sum, item) => sum + Number(item.quantity || 1),
-        0
-      ),
-      value: purchaseValue,
-      currency: "UAH"
-    });
-  }
   cart = [];
   saveCart();
   updateCart();
@@ -563,20 +533,26 @@ async function submitOrder(event) {
   showOrderSuccess(result.order_number || result.orderNumber);
 }
 
+function closeCategoryMenu() {
+  mainNav.classList.remove("open");
+  mobileMenuButton.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("menu-open");
+}
+
+function scrollToCatalog() {
+  const catalog = document.getElementById("catalog");
+  if (!catalog) return;
+  setTimeout(() => catalog.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+}
+
 filterButtons.forEach(button => {
   button.addEventListener("click", () => {
     filterButtons.forEach(item => item.classList.remove("active"));
     button.classList.add("active");
     activeCategory = button.dataset.category;
     renderProducts();
-    mainNav.classList.remove("open");
-
-    if (button.dataset.scrollCatalog === "true") {
-      const catalog = document.getElementById("catalog");
-      if (catalog) {
-        setTimeout(() => catalog.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
-      }
-    }
+    closeCategoryMenu();
+    scrollToCatalog();
   });
 });
 
@@ -613,8 +589,19 @@ searchInput.addEventListener("input", () => {
   renderProducts();
 });
 
+mobileMenuButton.setAttribute("aria-expanded", "false");
+
 mobileMenuButton.addEventListener("click", () => {
-  mainNav.classList.toggle("open");
+  const willOpen = !mainNav.classList.contains("open");
+  mainNav.classList.toggle("open", willOpen);
+  mobileMenuButton.setAttribute("aria-expanded", String(willOpen));
+  document.body.classList.toggle("menu-open", willOpen);
+});
+
+document.addEventListener("click", event => {
+  if (window.innerWidth > 1100 || !mainNav.classList.contains("open")) return;
+  if (mainNav.contains(event.target) || mobileMenuButton.contains(event.target)) return;
+  closeCategoryMenu();
 });
 
 cartIcon.addEventListener("click", openCart);
@@ -656,6 +643,7 @@ document.addEventListener("keydown", event => {
   if (event.key === "Escape") {
     closeCart();
     closeProduct();
+    closeCategoryMenu();
   }
 });
 

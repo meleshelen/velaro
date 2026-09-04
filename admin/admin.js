@@ -103,6 +103,7 @@ adminLogoutButton.addEventListener("click", async () => {
 });
 let adminProducts = [];
 let uploadedImageData = "";
+let uploadedImagesData = [];
 
 function adminImage(src) {
   if (!src) return "../images/products/placeholder.svg";
@@ -122,6 +123,9 @@ const imageUrlInput = document.getElementById("image-url");
 const imagePreview = document.getElementById("image-preview");
 const descriptionInput = document.getElementById("description");
 const badgeInput = document.getElementById("badge");
+const colorInput = document.getElementById("color");
+const sortOrderInput = document.getElementById("sort-order");
+const imagePreviews = document.getElementById("image-previews");
 const sizesInput = document.getElementById("sizes");
 const braSizesInput = document.getElementById("bra-sizes");
 const pantiesSizesInput = document.getElementById("panties-sizes");
@@ -132,6 +136,8 @@ const productCount = document.getElementById("product-count");
 const formTitle = document.getElementById("form-title");
 const resetFormButton = document.getElementById("reset-form");
 const restoreDefaultsButton = document.getElementById("restore-defaults");
+const adminProductSearch = document.getElementById("admin-product-search");
+const adminProductSort = document.getElementById("admin-product-sort");
 
 const categoryNames = {
   women: "Жіночий одяг",
@@ -166,19 +172,49 @@ function stringifySizes(sizes) {
 
 
 
+function totalStock(product) {
+  const groups = product.type === "lingerie"
+    ? [product.braSizes || {}, product.pantiesSizes || {}]
+    : [product.sizes || {}];
+
+  return groups.reduce(
+    (sum, group) => sum + Object.values(group).reduce((part, qty) => part + Number(qty || 0), 0),
+    0
+  );
+}
+
 function renderAdminProducts() {
   adminProductsContainer.innerHTML = "";
   productCount.textContent = `${adminProducts.length} товарів`;
 
-  adminProducts.forEach(product => {
+  const query = (adminProductSearch?.value || "").trim().toLowerCase();
+  const sort = adminProductSort?.value || "catalog";
+
+  let list = adminProducts.filter(product =>
+    [product.name, product.article, product.color, product.categoryName]
+      .join(" ")
+      .toLowerCase()
+      .includes(query)
+  );
+
+  list = [...list];
+  if (sort === "catalog") list.sort((a, b) => Number(a.sortOrder ?? a.id) - Number(b.sortOrder ?? b.id) || Number(a.id) - Number(b.id));
+  if (sort === "newest") list.sort((a, b) => Number(b.id) - Number(a.id));
+  if (sort === "name") list.sort((a, b) => String(a.name).localeCompare(String(b.name), "uk"));
+  if (sort === "price-asc") list.sort((a, b) => Number(a.price) - Number(b.price));
+  if (sort === "price-desc") list.sort((a, b) => Number(b.price) - Number(a.price));
+
+  list.forEach(product => {
     const row = document.createElement("article");
     row.className = "admin-product";
+    const stock = totalStock(product);
 
     row.innerHTML = `
       <img src="${adminImage(product.image || (product.images && product.images[0]))}" alt="${product.name}">
       <div>
         <h3>${product.name}</h3>
         <p>${product.categoryName} · ${product.article || "без артикула"}</p>
+        <p>${product.color ? `Колір: ${product.color} · ` : ""}Залишок: ${stock} шт. · Позиція: ${Number(product.sortOrder ?? product.id)}</p>
         <strong>${Number(product.price).toLocaleString("uk-UA")} грн</strong>
       </div>
       <div class="product-actions">
@@ -189,6 +225,10 @@ function renderAdminProducts() {
 
     adminProductsContainer.appendChild(row);
   });
+
+  if (!list.length) {
+    adminProductsContainer.innerHTML = '<p class="admin-empty">Товарів за цим пошуком не знайдено.</p>';
+  }
 
   document.querySelectorAll("[data-edit]").forEach(button => {
     button.addEventListener("click", () => editProduct(Number(button.dataset.edit)));
@@ -206,23 +246,65 @@ function updateTypePanels() {
 }
 
 function showPreview(src) {
-  if (!src) {
+  showPreviews(src ? [src] : []);
+}
+
+function showPreviews(images) {
+  const list = (images || []).filter(Boolean);
+  imagePreviews.innerHTML = "";
+
+  if (!list.length) {
     imagePreview.classList.remove("visible");
     imagePreview.removeAttribute("src");
+    imagePreviews.appendChild(imagePreview);
     return;
   }
 
-  imagePreview.src = adminImage(src);
-  imagePreview.classList.add("visible");
+  list.forEach((src, index) => {
+    const img = index === 0 ? imagePreview : document.createElement("img");
+    img.className = "image-preview visible";
+    img.alt = index === 0 ? "Головне фото" : `Фото ${index + 1}`;
+    img.src = adminImage(src);
+    imagePreviews.appendChild(img);
+  });
+}
+
+function compressImageFile(file, maxSide = 1400, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Не вдалося прочитати фото."));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("Не вдалося відкрити фото."));
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        const scale = Math.min(1, maxSide / Math.max(width, height));
+        width = Math.max(1, Math.round(width * scale));
+        height = Math.max(1, Math.round(height * scale));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function resetForm() {
   productForm.reset();
   productIdInput.value = "";
   uploadedImageData = "";
+  uploadedImagesData = [];
   imageUrlInput.value = "";
   formTitle.textContent = "Додати товар";
   typeInput.value = "clothes";
+  sortOrderInput.value = adminProducts.length ? Math.max(...adminProducts.map(item => Number(item.sortOrder ?? item.id ?? 0))) + 1 : 1;
   updateTypePanels();
   showPreview("");
 }
@@ -240,8 +322,11 @@ function editProduct(productId) {
   oldPriceInput.value = product.oldPrice || "";
   descriptionInput.value = product.description || "";
   badgeInput.value = product.badge || "";
+  colorInput.value = product.color || "";
+  sortOrderInput.value = Number(product.sortOrder ?? product.id ?? 0);
   imageUrlInput.value = product.image || "";
-  uploadedImageData = product.image || "";
+  uploadedImagesData = Array.isArray(product.images) && product.images.length ? [...product.images] : (product.image ? [product.image] : []);
+  uploadedImageData = uploadedImagesData[0] || product.image || "";
 
   sizesInput.value = stringifySizes(product.sizes);
   braSizesInput.value = stringifySizes(product.braSizes);
@@ -249,7 +334,7 @@ function editProduct(productId) {
 
   formTitle.textContent = "Редагувати товар";
   updateTypePanels();
-  showPreview(product.image);
+  showPreviews(uploadedImagesData);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -274,35 +359,44 @@ async function deleteProduct(productId) {
   }
 }
 
-imageFileInput.addEventListener("change", () => {
-  const file = imageFileInput.files[0];
+imageFileInput.addEventListener("change", async () => {
+  const files = Array.from(imageFileInput.files || []).slice(0, 4);
 
-  if (!file) {
+  if (!files.length) {
     uploadedImageData = "";
+    uploadedImagesData = [];
     return;
   }
 
-  if (file.size > 2_000_000) {
-    alert("Фото завелике. Оберіть файл до 2 МБ.");
-    imageFileInput.value = "";
-    return;
-  }
+  try {
+    imageFileInput.disabled = true;
+    uploadedImagesData = [];
 
-  const reader = new FileReader();
+    for (const file of files) {
+      if (!file.type.startsWith("image/")) continue;
+      const data = await compressImageFile(file);
+      uploadedImagesData.push(data);
+    }
 
-  reader.onload = () => {
-    uploadedImageData = String(reader.result);
+    uploadedImageData = uploadedImagesData[0] || "";
     imageUrlInput.value = "";
-    showPreview(uploadedImageData);
-  };
-
-  reader.readAsDataURL(file);
+    showPreviews(uploadedImagesData);
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "Не вдалося підготувати фото.");
+    uploadedImageData = "";
+    uploadedImagesData = [];
+    imageFileInput.value = "";
+  } finally {
+    imageFileInput.disabled = false;
+  }
 });
 
 imageUrlInput.addEventListener("input", () => {
   if (imageUrlInput.value.trim()) {
     uploadedImageData = "";
-    showPreview(imageUrlInput.value.trim());
+    uploadedImagesData = [imageUrlInput.value.trim()];
+    showPreviews(uploadedImagesData);
   }
 });
 
@@ -318,6 +412,10 @@ productForm.addEventListener("submit", async event => {
     imageUrlInput.value.trim() ||
     "../images/products/placeholder.svg";
 
+  const images = uploadedImagesData.length
+    ? uploadedImagesData
+    : [image];
+
   const product = {
     name: nameInput.value.trim(),
     article: articleInput.value.trim(),
@@ -329,9 +427,11 @@ productForm.addEventListener("submit", async event => {
       ? Number(oldPriceInput.value)
       : null,
     image,
-    images: [image],
+    images,
     description: descriptionInput.value.trim(),
     badge: badgeInput.value.trim(),
+    color: colorInput.value.trim(),
+    sortOrder: Number(sortOrderInput.value || 0),
     sizes: {},
     braSizes: {},
     pantiesSizes: {}
@@ -387,11 +487,12 @@ productForm.addEventListener("submit", async event => {
   } catch (error) {
     console.error("Помилка збереження товару:", error);
 
-    alert(
-      `Не вдалося зберегти товар: ${
-        error.message || "невідома помилка"
-      }`
-    );
+    const rawMessage = error.message || "невідома помилка";
+    const friendlyMessage = rawMessage.includes("duplicate key value violates unique constraint")
+      ? "У Supabase збилась автонумерація ID товарів. Запустіть файл supabase/FIX-PRODUCT-ID.sql один раз у SQL Editor, потім повторіть збереження."
+      : rawMessage;
+
+    alert(`Не вдалося зберегти товар: ${friendlyMessage}`);
   } finally {
     if (submitButton) {
       submitButton.disabled = false;
@@ -410,6 +511,9 @@ restoreDefaultsButton.addEventListener("click", () => {
   renderAdminProducts();
   resetForm();
 });
+
+adminProductSearch?.addEventListener("input", renderAdminProducts);
+adminProductSort?.addEventListener("change", renderAdminProducts);
 
 async function initializeAdminProducts() {
   updateTypePanels();

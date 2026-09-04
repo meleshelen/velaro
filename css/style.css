@@ -952,17 +952,7 @@ img {
   margin-bottom:10px;
   font-size:28px;
   line-height:1;
-}
-
-/* ===== VELARO sales-first additions ===== */
-.hero-main-cta.filter-btn {border-radius:10px!important;background:var(--accent)!important;color:#fff!important;padding:0 22px!important;min-height:48px;font-weight:700}
-.hero-main-cta.filter-btn:hover{background:var(--accent-hover)!important}
-.size-help{margin:28px 5vw 0;padding:34px 38px;display:flex;align-items:center;justify-content:space-between;gap:30px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 12px 34px rgba(24,24,24,.05)}
-.size-help h2{margin:0 0 10px;font-family:Georgia,serif;font-size:clamp(28px,3vw,42px)}
-.size-help p{max-width:720px;margin:0;color:var(--muted);line-height:1.65}
-.size-help .eyebrow{color:var(--accent)}
-@media(max-width:760px){.size-help{margin:18px 18px 0;padding:26px 22px;align-items:stretch;flex-direction:column}.size-help .primary-button{width:100%}.main-nav .filter-btn[data-category="lingerie"]{order:-10}}
-
+}\n\n/* ===== VELARO sales-first additions ===== */\n.hero-main-cta.filter-btn {border-radius:10px!important;background:var(--accent)!important;color:#fff!important;padding:0 22px!important;min-height:48px;font-weight:700}\n.hero-main-cta.filter-btn:hover{background:var(--accent-hover)!important}\n.size-help{margin:28px 5vw 0;padding:34px 38px;display:flex;align-items:center;justify-content:space-between;gap:30px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 12px 34px rgba(24,24,24,.05)}\n.size-help h2{margin:0 0 10px;font-family:Georgia,serif;font-size:clamp(28px,3vw,42px)}\n.size-help p{max-width:720px;margin:0;color:var(--muted);line-height:1.65}\n.size-help .eyebrow{color:var(--accent)}\n@media(max-width:760px){.size-help{margin:18px 18px 0;padding:26px 22px;align-items:stretch;flex-direction:column}.size-help .primary-button{width:100%}.main-nav .filter-btn[data-category="lingerie"]{order:-10}}\n
 /* VELARO 4.1 — hero made from real Balaloum photos */
 .hero-product img{object-fit:cover;border-radius:18px}
 .hero-product-main{width:47%;height:70%;left:25%;top:4%;z-index:4}
@@ -975,265 +965,490 @@ img {
   .hero-product-flat{width:32%;height:36%;left:1%}
 }
 
-/* ===== VELARO 5.4 — CLEAN MOBILE PRODUCT MODAL ===== */
-@media (max-width: 768px) {
+/* ===== VELARO 4.3: professional lingerie hero ===== */
+.hero-showcase-professional{
+  min-height:550px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hero-professional-image{
+  position:absolute;
+  inset:0;
+  margin:0;
+  overflow:hidden;
+  border-radius:28px;
+  box-shadow:0 30px 70px rgba(50,39,28,.14);
+  background:#f6eee5;
+}
+.hero-professional-image img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+}
+.hero-showcase-professional .hero-stamp{
+  left:4%;
+  top:6%;
+  background:#b99a7b;
+  box-shadow:0 16px 35px rgba(98,73,50,.22);
+}
+@media(max-width:980px){
+  .hero-showcase-professional{min-height:470px}
+}
+@media(max-width:640px){
+  .hero-showcase-professional{min-height:390px}
+  .hero-professional-image{border-radius:20px}
+  .hero-professional-image img{object-position:56% center}
+}
 
-  .product-modal.open {
+/* ===== VELARO 4.8 — premium, high-contrast product modal ===== */
+.product-modal-card{
+  width:min(1040px,calc(100% - 30px));
+  background:#151515;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:26px;
+  box-shadow:0 30px 80px rgba(0,0,0,.42);
+  overflow:hidden;
+}
+.product-modal-image-wrap{
+  position:relative;
+  min-height:650px;
+  background:#ece8e1;
+}
+.product-modal-image-wrap>img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.product-gallery{
+  position:absolute;
+  left:16px;
+  right:16px;
+  bottom:16px;
+  display:flex;
+  gap:8px;
+  padding:8px;
+  overflow-x:auto;
+  background:rgba(15,15,15,.58);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;
+  backdrop-filter:blur(10px);
+}
+.gallery-thumb{
+  flex:0 0 60px;
+  width:60px;
+  height:60px;
+  padding:0;
+  overflow:hidden;
+  border:2px solid transparent;
+  border-radius:10px;
+  background:#222;
+  opacity:.82;
+}
+.gallery-thumb.active{border-color:#0f7a4b;opacity:1}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover}
+.product-modal-info{
+  padding:52px 42px 38px;
+  background:linear-gradient(180deg,#1d1d1d 0%,#111 100%);
+  color:#fff;
+}
+.product-modal-info h2,
+.product-modal-info p,
+.product-modal-info span,
+.product-modal-info div,
+.product-category,
+.product-article,
+.product-description,
+.product-modal-price,
+.option-block,
+.option-block>span{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+}
+.product-category{
+  display:inline-flex;
+  width:max-content;
+  margin:0 0 14px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:#0b5b3a;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.product-modal-info h2{
+  margin:0 0 10px;
+  font-family:inherit;
+  font-size:clamp(34px,4vw,52px);
+  line-height:1.03;
+  font-weight:850;
+  letter-spacing:-.035em;
+}
+.product-article{margin:0 0 20px;color:#c8c8c8!important;-webkit-text-fill-color:#c8c8c8!important;font-size:15px}
+.product-description{margin:0 0 18px;color:#f4f4f4!important;-webkit-text-fill-color:#f4f4f4!important;font-size:17px;line-height:1.55}
+.product-modal-price{margin:18px 0 26px;font-size:34px;font-weight:900;letter-spacing:-.02em}
+.product-modal-price .old-price{color:#999!important;-webkit-text-fill-color:#999!important}
+.option-block{margin:24px 0}
+.option-block>span{margin-bottom:12px;font-size:19px;font-weight:850}
+.size-options{gap:10px}
+.size-button{
+  min-width:66px;
+  min-height:58px;
+  padding:0 18px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:14px;
+  background:#3a3a3a;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-size:18px;
+  font-weight:700;
+  box-shadow:none;
+}
+.size-button:hover{border-color:#0f7a4b;background:#303b35}
+.size-button.active{border-color:#16895a;background:#0b5b3a;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#modal-add-to-cart{
+  min-height:62px;
+  margin-top:12px;
+  border-radius:16px;
+  background:linear-gradient(90deg,#0b5b3a,#148654);
+  font-size:20px;
+  font-weight:850;
+  box-shadow:0 12px 28px rgba(11,91,58,.25);
+}
+#modal-add-to-cart:hover{background:linear-gradient(90deg,#0a5034,#117448)}
+.cart-button-icon{margin-left:8px}
+.modal-trust-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.11);
+  font-size:12px;
+  text-align:center;
+}
+.modal-trust-row span{color:#cfcfcf!important;-webkit-text-fill-color:#cfcfcf!important}
+.product-close{
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:13px;
+  background:rgba(10,10,10,.78);
+  color:#fff;
+  font-size:30px;
+  backdrop-filter:blur(8px);
+}
+
+@media(max-width:760px){
+  .product-modal{padding:0;background:rgba(0,0,0,.82)}
+  .product-modal-card{
+    width:calc(100% - 18px);
+    max-height:calc(100dvh - 18px);
+    margin:9px auto;
+    border-radius:24px;
+    background:#151515;
+  }
+  .product-modal-image-wrap{min-height:0;height:auto;aspect-ratio:1/1;background:#202020}
+  .product-modal-image-wrap>img{height:100%;object-fit:cover}
+  .product-gallery{left:10px;right:10px;bottom:10px;padding:6px}
+  .gallery-thumb{flex-basis:48px;width:48px;height:48px;border-radius:8px}
+  .product-modal-info{padding:26px 22px calc(28px + env(safe-area-inset-bottom))}
+  .product-category{margin-bottom:10px;font-size:10px}
+  .product-modal-info h2{font-size:36px;line-height:1.02}
+  .product-article{font-size:14px;margin-bottom:14px}
+  .product-description{font-size:16px;line-height:1.5}
+  .product-modal-price{font-size:32px;margin:14px 0 22px}
+  .option-block{margin:20px 0}
+  .option-block>span{font-size:20px}
+  .size-button{min-width:72px;min-height:58px;font-size:19px;border-radius:14px}
+  #modal-add-to-cart{min-height:64px;font-size:20px}
+  .modal-trust-row{grid-template-columns:1fr;gap:7px;text-align:left}
+  .modal-trust-row span{font-size:13px}
+  .product-close{right:12px;top:12px;width:44px;height:44px}
+}
+
+/* ===== VELARO 4.9 — mobile product card readability ===== */
+.product-official-store{
+  margin:22px 0 0;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.11);
+  color:#aaa!important;
+  -webkit-text-fill-color:#aaa!important;
+  text-align:center;
+  font-size:13px;
+}
+@media(max-width:760px){
+  .product-modal-card{
+    display:block;
+    width:calc(100% - 18px);
+    max-height:calc(100dvh - 18px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    background:#111;
+    border-radius:24px;
+  }
+  .product-modal-image-wrap{
+    width:100%;
+    min-height:0;
+    height:auto;
+    aspect-ratio:auto;
+    padding:0;
+    background:#f4f2ee;
+  }
+  .product-modal-image-wrap>img{
+    width:100%;
+    height:auto;
+    max-height:none;
+    object-fit:contain;
+    object-position:center;
+    background:#f4f2ee;
+  }
+  .product-gallery{
+    position:static;
+    margin:0;
+    padding:8px 10px 10px;
+    background:#171717;
+    border:0;
+    border-radius:0;
+  }
+  .product-modal-info{
+    padding:24px 20px calc(28px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,#171717 0%,#0f0f0f 100%);
+  }
+  .product-category{font-size:11px;margin-bottom:12px}
+  .product-modal-info h2{
+    margin-bottom:8px;
+    font-size:clamp(32px,10vw,42px);
+    line-height:1.02;
+    letter-spacing:-.025em;
+  }
+  .product-article{font-size:15px!important;line-height:1.35;margin-bottom:14px!important}
+  .product-description{font-size:17px!important;line-height:1.5;margin-bottom:14px!important}
+  .product-modal-price{font-size:38px!important;line-height:1;margin:18px 0 26px!important}
+  .option-block>span{font-size:20px!important}
+  .size-options{gap:10px}
+  .size-button{
+    min-width:74px;
+    min-height:60px;
+    padding:0 18px;
+    background:#2d2d2d;
+    border:1px solid #555;
+    font-size:20px;
+  }
+  .size-button.active{
+    background:#064f31;
+    border:2px solid #10c96b;
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+  }
+  #modal-add-to-cart{
+    width:100%;
+    min-height:66px;
+    margin-top:14px;
+    font-size:21px;
+    border-radius:15px;
+  }
+  .modal-trust-row{
+    grid-template-columns:repeat(3,1fr);
+    gap:0;
+    margin-top:20px;
+    padding:16px 4px;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:14px;
+    text-align:center;
+  }
+  .modal-trust-row span{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:38px;
+    padding:0 7px;
+    font-size:11px!important;
+    line-height:1.25;
+  }
+  .modal-trust-row span+span{border-left:1px solid rgba(255,255,255,.13)}
+  .product-close{
+    position:fixed;
+    right:18px;
+    top:18px;
+    z-index:1002;
+    border-radius:50%;
+    background:rgba(10,10,10,.9);
+  }
+}
+
+.product-color{margin:6px 0;color:#d7d7d7;font-weight:700}.product-color[hidden]{display:none!important}
+
+/* ===== VELARO 5.2 — definitive mobile product modal fix ===== */
+@media (max-width: 760px) {
+  .product-modal-card {
     display: block !important;
+    grid-template-columns: none !important;
+    width: calc(100% - 20px) !important;
+    max-width: 520px !important;
+    max-height: calc(100dvh - 20px) !important;
+    margin: 10px auto !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    padding: 8px !important;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .product-modal-card {
-    position: relative !important;
-    display: block !important;
-    width: 100% !important;
-    max-width: 720px !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    margin: 0 auto 24px !important;
-    overflow: visible !important;
+    background: #111 !important;
     border-radius: 22px !important;
-    background: #151515 !important;
-    box-shadow: 0 18px 60px rgba(0,0,0,.28) !important;
   }
-
   .product-modal-image-wrap {
-    position: relative !important;
     display: block !important;
+    position: relative !important;
     width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
-    max-height: none !important;
-    margin: 0 !important;
+    aspect-ratio: auto !important;
     padding: 0 !important;
     overflow: hidden !important;
-    border-radius: 22px 22px 0 0 !important;
-    background: #f4f3ef !important;
+    background: #f4f2ee !important;
   }
-
-  #product-modal-image {
-    position: static !important;
+  .product-modal-image-wrap > #product-modal-image {
     display: block !important;
+    position: static !important;
     width: 100% !important;
     height: auto !important;
-    min-height: 0 !important;
-    max-height: 72vh !important;
-    margin: 0 !important;
+    max-height: 62vh !important;
     object-fit: contain !important;
     object-position: center !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    background: #f4f3ef !important;
+    margin: 0 !important;
+    background: #f4f2ee !important;
   }
-
-  .product-gallery {
-    position: static !important;
+  #product-gallery.product-gallery {
     display: flex !important;
-    align-items: center !important;
+    position: static !important;
     width: 100% !important;
     height: auto !important;
-    min-height: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
     gap: 8px !important;
     margin: 0 !important;
-    padding: 10px !important;
+    padding: 10px 12px !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    background: #151515 !important;
-    scrollbar-width: thin;
+    background: #181818 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
   }
-
-  .product-gallery .gallery-thumb {
-    flex: 0 0 68px !important;
+  #product-gallery .gallery-thumb {
     display: block !important;
-    width: 68px !important;
-    height: 68px !important;
-    min-width: 68px !important;
-    min-height: 68px !important;
-    margin: 0 !important;
+    flex: 0 0 58px !important;
+    width: 58px !important;
+    height: 58px !important;
+    min-width: 58px !important;
+    min-height: 58px !important;
     padding: 0 !important;
     overflow: hidden !important;
-    border: 2px solid transparent !important;
-    border-radius: 10px !important;
-    background: #2a2a2a !important;
+    border-radius: 8px !important;
   }
-
-  .product-gallery .gallery-thumb.active {
-    border-color: #2aa85f !important;
-  }
-
-  .product-gallery .gallery-thumb img {
+  #product-gallery .gallery-thumb img {
     display: block !important;
     width: 100% !important;
     height: 100% !important;
-    min-width: 0 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
     object-fit: cover !important;
-    border-radius: 8px !important;
+    margin: 0 !important;
   }
-
   .product-modal-info {
-    position: static !important;
     display: block !important;
+    position: static !important;
     width: 100% !important;
-    margin: 0 !important;
-    padding: 20px 18px 26px !important;
-    background: #151515 !important;
-    color: #ffffff !important;
+    padding: 22px 18px calc(28px + env(safe-area-inset-bottom)) !important;
+    background: #111 !important;
   }
-
-  .product-modal-info,
-  .product-modal-info *,
-  .product-modal-info p,
-  .product-modal-info span,
-  .product-modal-info div,
   .product-modal-info h2,
-  .product-modal-info strong {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    opacity: 1 !important;
+  .product-modal-info p,
+  .product-modal-info span { position: static !important; }
+  .product-modal-info h2 { color:#fff !important; font-size:32px !important; line-height:1.08 !important; }
+  .product-article { color:#bbb !important; font-size:14px !important; }
+  .product-description { color:#eee !important; font-size:16px !important; line-height:1.45 !important; }
+  .product-modal-price { color:#fff !important; font-size:36px !important; font-weight:900 !important; }
+  .product-close { position: fixed !important; z-index: 1005 !important; }
+}
+
+
+/* ===== VELARO 5.3 — Balaloum hero + sliding catalog menu ===== */
+.hero-professional-image img {
+  object-position: center center;
+}
+
+#catalog {
+  scroll-margin-top: 90px;
+}
+
+@media (max-width: 1100px) {
+  .mobile-menu-button {
+    position: relative;
+    z-index: 102;
   }
 
-  #product-modal-category {
-    margin: 0 0 6px !important;
-    color: #9fd7b7 !important;
-    -webkit-text-fill-color: #9fd7b7 !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-  }
-
-  #product-modal-title {
-    display: block !important;
-    margin: 0 0 8px !important;
-    font-family: Inter, Arial, sans-serif !important;
-    font-size: 30px !important;
-    line-height: 1.08 !important;
-    font-weight: 800 !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-  }
-
-  #product-modal-article,
-  #product-modal-description {
-    position: static !important;
-    display: block !important;
-    margin: 6px 0 !important;
-    padding: 0 !important;
-    background: transparent !important;
-    color: #d7d7d7 !important;
-    -webkit-text-fill-color: #d7d7d7 !important;
-    font-size: 16px !important;
-    line-height: 1.45 !important;
-  }
-
-  #product-modal-price {
-    display: block !important;
-    margin: 16px 0 22px !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    font-size: 34px !important;
-    line-height: 1 !important;
-    font-weight: 900 !important;
-  }
-
-  .option-block {
-    display: block;
-    margin: 18px 0 !important;
-  }
-
-  .option-block > span {
-    display: block !important;
-    margin: 0 0 10px !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    font-size: 18px !important;
-    font-weight: 750 !important;
-  }
-
-  .size-options {
+  .main-nav {
     display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 9px !important;
-  }
-
-  .size-options .size-button,
-  .size-options button {
-    min-width: 68px !important;
-    min-height: 52px !important;
-    padding: 10px 14px !important;
-    border: 1px solid #4a4a4a !important;
-    border-radius: 12px !important;
-    background: #202020 !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    font-size: 17px !important;
-    font-weight: 700 !important;
-    opacity: 1 !important;
-  }
-
-  .size-options .size-button.active,
-  .size-options button.active,
-  .size-options button.selected {
-    border-color: #2aa85f !important;
-    background: #0d4a28 !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-  }
-
-  #modal-add-to-cart {
-    display: flex !important;
-    width: 100% !important;
-    min-height: 60px !important;
-    margin: 22px 0 0 !important;
-    padding: 12px 16px !important;
-    border: 0 !important;
-    border-radius: 14px !important;
-    background: #15803d !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    font-size: 20px !important;
-    font-weight: 800 !important;
-    opacity: 1 !important;
-  }
-
-  #modal-add-to-cart .cart-button-icon {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-  }
-
-  .modal-trust-row {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    width: min(84vw, 340px) !important;
+    height: 100dvh !important;
+    padding: 92px 22px 28px !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
     gap: 8px !important;
-    margin: 14px 0 0 !important;
-    padding: 14px !important;
-    border-radius: 14px !important;
-    background: #101010 !important;
+    overflow-y: auto !important;
+    background: #fff !important;
+    border-right: 1px solid var(--border) !important;
+    border-bottom: 0 !important;
+    box-shadow: 18px 0 50px rgba(24,24,24,.16) !important;
+    transform: translateX(-105%) !important;
+    transition: transform .28s ease !important;
+    z-index: 101 !important;
   }
 
-  .modal-trust-row span {
-    color: #f2f2f2 !important;
-    -webkit-text-fill-color: #f2f2f2 !important;
-    font-size: 14px !important;
+  .main-nav::before {
+    content: "Каталог";
+    display: block;
+    margin: 0 4px 12px;
+    font-family: Georgia, serif;
+    font-size: 27px;
+    font-weight: 700;
+    color: var(--text);
   }
 
-  .product-close {
-    position: absolute !important;
-    top: 12px !important;
-    right: 12px !important;
-    left: auto !important;
-    z-index: 100 !important;
-    float: none !important;
-    width: 48px !important;
-    height: 48px !important;
-    margin: 0 !important;
-    border: 1px solid rgba(0,0,0,.12) !important;
-    border-radius: 999px !important;
-    background: rgba(255,255,255,.96) !important;
-    color: #000000 !important;
-    -webkit-text-fill-color: #000000 !important;
-    box-shadow: 0 4px 18px rgba(0,0,0,.12) !important;
+  .main-nav.open {
+    transform: translateX(0) !important;
   }
+
+  .main-nav .filter-btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 16px;
+  }
+
+  body.menu-open::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,.34);
+  }
+}
+
+@media (max-width: 760px) {
+  #catalog { scroll-margin-top: 78px; }
+  .hero-professional-image img { object-position: center center !important; }
 }

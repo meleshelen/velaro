@@ -78,6 +78,8 @@ function convertSupabaseProduct(product) {
     images,
     description: product.description || "",
     badge: product.badge || "",
+    color: product.color || "",
+    sortOrder: Number(product.sort_order ?? product.id ?? 0),
 
     sizes: isLingerie ? {} : sizesData,
 
@@ -99,10 +101,21 @@ let productsLoadingPromise = null;
 async function requestProductsFromSupabase() {
   const client = getSupabaseClient();
 
-  const { data, error } = await client
+  let { data, error } = await client
     .from("products")
     .select("*")
+    .order("sort_order", { ascending: true })
     .order("id", { ascending: true });
+
+  // Сумісність, якщо SQL-оновлення 5.1 ще не запускали.
+  if (error && String(error.message || "").includes("sort_order")) {
+    const fallback = await client
+      .from("products")
+      .select("*")
+      .order("id", { ascending: true });
+    data = fallback.data;
+    error = fallback.error;
+  }
 
   if (error) {
     throw error;

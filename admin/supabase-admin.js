@@ -54,6 +54,8 @@ function convertAdminProduct(row) {
     images: Array.isArray(imagesData) ? imagesData : [],
     description: row.description || "",
     badge: row.badge || "",
+    color: row.color || "",
+    sortOrder: Number(row.sort_order ?? row.id ?? 0),
 
     sizes: sizesData.regular || sizesData || {},
     braSizes: sizesData.bra || braSizesData || {},
@@ -83,6 +85,8 @@ function prepareProductForSupabase(product) {
         : [],
     description: product.description || "",
     badge: product.badge || "",
+    color: product.color || "",
+    sort_order: Number.isFinite(Number(product.sortOrder)) ? Number(product.sortOrder) : 0,
     sizes: product.sizes || {},
     bra_sizes: product.braSizes || {},
     panties_sizes: product.pantiesSizes || {}
@@ -121,8 +125,6 @@ const velaroAdminApi = {
       .insert(productData)
       .select("*")
       .single();
-console.log("UPDATE RESULT:", data);
-console.log("UPDATE ERROR:", error);
     if (error) {
       throw error;
     }
