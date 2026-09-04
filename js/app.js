@@ -591,12 +591,16 @@ searchInput.addEventListener("input", () => {
 
 mobileMenuButton.setAttribute("aria-expanded", "false");
 
-mobileMenuButton.addEventListener("click", () => {
-  const willOpen = !mainNav.classList.contains("open");
-  mainNav.classList.toggle("open", willOpen);
-  mobileMenuButton.setAttribute("aria-expanded", String(willOpen));
-  document.body.classList.toggle("menu-open", willOpen);
-});
+if (mobileMenuButton && mainNav) {
+  mobileMenuButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const willOpen = !mainNav.classList.contains("open");
+    mainNav.classList.toggle("open", willOpen);
+    mobileMenuButton.setAttribute("aria-expanded", String(willOpen));
+    document.body.classList.toggle("menu-open", willOpen);
+  });
+}
 
 document.addEventListener("click", event => {
   if (window.innerWidth > 1100 || !mainNav.classList.contains("open")) return;
