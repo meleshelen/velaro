@@ -107,6 +107,20 @@ function getVisibleProducts() {
 }
 
 function renderProducts() {
+  const catalogTitle = document.querySelector("#catalog .section-heading h2");
+
+const categoryTitles = {
+  lingerie: "Білизна в наявності",
+  all: "Усі товари",
+  women: "Жіночий одяг в наявності",
+  men: "Чоловічі товари в наявності",
+  "women-shoes": "Жіноче взуття в наявності",
+  "men-shoes": "Чоловіче взуття в наявності"
+};
+
+if (catalogTitle) {
+  catalogTitle.textContent = categoryTitles[activeCategory] || "Товари в наявності";
+}
   const visibleProducts = getVisibleProducts();
   productsGrid.innerHTML = "";
   productsEmpty.hidden = visibleProducts.length > 0;
