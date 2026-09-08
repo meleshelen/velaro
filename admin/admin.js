@@ -272,28 +272,83 @@ function showPreviews(images) {
 function compressImageFile(file, maxSide = 1400, quality = 0.82) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Не вдалося прочитати фото."));
+
+    reader.onerror = () =>
+      reject(new Error("Не вдалося прочитати фото."));
+
     reader.onload = () => {
       const img = new Image();
-      img.onerror = () => reject(new Error("Не вдалося відкрити фото."));
+
+      img.onerror = () =>
+        reject(new Error("Не вдалося відкрити фото."));
+
       img.onload = () => {
         let width = img.width;
         let height = img.height;
-        const scale = Math.min(1, maxSide / Math.max(width, height));
+
+        const scale = Math.min(
+          1,
+          maxSide / Math.max(width, height)
+        );
+
         width = Math.max(1, Math.round(width * scale));
         height = Math.max(1, Math.round(height * scale));
 
         const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
+
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", quality));
+
+        canvas.toBlob(
+          blob => {
+            if (!blob) {
+              reject(new Error("Не вдалося стиснути фото."));
+              return;
+            }
+            resolve(blob);
+          },
+          "image/jpeg",
+          quality
+        );
       };
+
       img.src = String(reader.result);
     };
+
     reader.readAsDataURL(file);
   });
+}
+
+async function uploadProductImage(file, index = 0) {
+  const client = window.velaroAdminApi.getClient();
+
+  const blob = await compressImageFile(file);
+  const uniqueName =
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  const filePath = `products/${uniqueName}-${index}.jpg`;
+
+  const { error } = await client.storage
+    .from("product-images")
+    .upload(filePath, blob, {
+      contentType: "image/jpeg",
+      cacheControl: "3600",
+      upsert: false
+    });
+
+  if (error) {
+    throw new Error(`Не вдалося завантажити фото: ${error.message}`);
+  }
+
+  const { data } = client.storage
+    .from("product-images")
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
 }
 
 function resetForm() {
@@ -374,8 +429,12 @@ imageFileInput.addEventListener("change", async () => {
 
     for (const file of files) {
       if (!file.type.startsWith("image/")) continue;
-      const data = await compressImageFile(file);
-      uploadedImagesData.push(data);
+     const url = await uploadProductImage(
+  file,
+  uploadedImagesData.length
+);
+
+uploadedImagesData.push(url);
     }
 
     uploadedImageData = uploadedImagesData[0] || "";
