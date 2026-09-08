@@ -163,64 +163,30 @@ function getCachedProducts() {
 
 
 async function loadProductsFromSupabase() {
-
-  // Якщо такий запит уже виконується — використовуємо його,
-  // а не створюємо ще один
   if (productsLoadingPromise) {
     return productsLoadingPromise;
   }
 
   productsLoadingPromise = (async () => {
-
-    const cachedProducts = getCachedProducts();
-
-    const fallbackProducts =
-      cachedProducts ||
-      structuredClone(DEFAULT_PRODUCTS);
-
     try {
-      const supabaseRequest = requestProductsFromSupabase();
-
-      // Максимально чекаємо Supabase 1 секунду
-      const timeout = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(null);
-        }, 1000);
-      });
-
-      const result = await Promise.race([
-        supabaseRequest,
-        timeout
-      ]);
-
-      if (result) {
-        return result;
-      }
-
-      console.warn(
-        "Supabase відповідає повільно. Показуємо локальний каталог."
-      );
-
-      // Запит Supabase продовжиться у фоні
-      supabaseRequest.catch((error) => {
-        console.warn(
-          "Фонове завантаження Supabase не вдалося:",
-          error
-        );
-      });
-
-      return fallbackProducts;
-
+      const products = await requestProductsFromSupabase();
+      return products;
     } catch (error) {
-
       console.error(
         "Помилка завантаження товарів із Supabase:",
         error
       );
 
-      return fallbackProducts;
-    }
+      const cachedProducts = getCachedProducts();
 
+      if (cachedProducts) {
+        console.warn("Показуємо останній збережений кеш товарів.");
+        return cachedProducts;
+      }
+
+      console.warn("Показуємо локальний каталог.");
+      return structuredClone(DEFAULT_PRODUCTS);
+    }
   })();
 
   try {
