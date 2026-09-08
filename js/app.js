@@ -689,6 +689,7 @@ async function initializeStorefront() {
 
   renderProducts();
   productsGrid.hidden = false;
+  document.getElementById("products-loading")?.remove();
 }
 initializeStorefront();
 
