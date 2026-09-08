@@ -673,33 +673,23 @@ window.addEventListener("storage", event => {
 });
 
 async function initializeStorefront() {
-  const cachedProducts =
-    typeof getCachedProducts === "function"
-      ? getCachedProducts()
-      : null;
-
-  // Сразу показываем сохранённый каталог
-  if (cachedProducts && cachedProducts.length) {
-    products = cachedProducts;
-    renderProducts();
-  }
+  // Не показуємо каталог, поки не завантажаться актуальні товари
+  productsGrid.hidden = true;
 
   updateCart();
   updateDeliveryFields();
 
-  // Затем незаметно получаем свежие товары из Supabase
   try {
     const freshProducts = await loadProductsFromSupabase();
-
-    if (freshProducts && freshProducts.length) {
-      products = freshProducts;
-      renderProducts();
-    }
+    products = Array.isArray(freshProducts) ? freshProducts : [];
   } catch (error) {
-    console.error("Не вдалося оновити каталог:", error);
+    console.error("Не вдалося завантажити каталог:", error);
+    products = [];
   }
-}
 
+  renderProducts();
+  productsGrid.hidden = false;
+}
 initializeStorefront();
 
 
