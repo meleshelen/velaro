@@ -1476,3 +1476,10 @@ img {
   .hero-professional-image { height: 360px !important; }
   .hero-professional-image img { object-position: center 48% !important; }
 }
+@media (min-width: 769px) {
+  .product-modal-card {
+    max-height: calc(100dvh - 24px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+}
